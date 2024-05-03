@@ -81,8 +81,19 @@ class _AuthScreenState extends State<AuthScreen> {
                           width: 200,
                           height: 50,
                           child: TextButton(
+                            style: ButtonStyle(
+                              overlayColor: MaterialStateProperty.resolveWith(
+                                (states) {
+                                  if (states.contains(MaterialState.hovered) ||
+                                      states.contains(MaterialState.pressed)) {
+                                    return Colors.transparent;
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
                             onPressed: _openSignupScreen,
-                            child: const Text('Create Account'),
+                            child: const Text('Create new account'),
                           ),
                         ),
                       ],
@@ -99,9 +110,30 @@ class _AuthScreenState extends State<AuthScreen> {
 
   void _openSignupScreen() {
     Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => const SignupScreen(),
-      ),
+      PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) {
+            return const SignupScreen();
+          },
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            var begin = const Offset(0.0, 1.0);
+            var end = Offset.zero;
+            var curve = Curves.easeInOut;
+            var tween = Tween(
+              begin: begin,
+              end: end,
+            ).chain(
+              CurveTween(
+                curve: curve,
+              ),
+            );
+            var offsetAnimation = animation.drive(tween);
+
+            return SlideTransition(
+              position: offsetAnimation,
+              child: child,
+            );
+          },
+          transitionDuration: const Duration(milliseconds: 500)),
     );
   }
 }

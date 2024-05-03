@@ -91,6 +91,17 @@ class _SignupScreenState extends State<SignupScreen> {
                           width: 200,
                           height: 50,
                           child: TextButton(
+                            style: ButtonStyle(
+                              overlayColor: MaterialStateProperty.resolveWith(
+                                (states) {
+                                  if (states.contains(MaterialState.hovered) ||
+                                      states.contains(MaterialState.pressed)) {
+                                    return Colors.transparent;
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
                             onPressed: _openAuthScreen,
                             child: const Text('I have an account'),
                           ),

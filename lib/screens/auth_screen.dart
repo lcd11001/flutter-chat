@@ -1,9 +1,8 @@
+import 'package:chat/screens/form_validation_screen.dart';
 import 'package:chat/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
 
-const _kRequiredLength = 6;
-
-class AuthScreen extends StatefulWidget {
+class AuthScreen extends FormValidationScreen {
   const AuthScreen({super.key});
 
   @override
@@ -61,7 +60,7 @@ class _AuthScreenState extends State<AuthScreen> {
                           autocorrect: false,
                           textCapitalization: TextCapitalization.none,
                           validator: (value) {
-                            if (!_isValidEmail(value)) {
+                            if (!widget.isValidEmail(value)) {
                               return 'Please enter a valid email address.';
                             }
                             return null;
@@ -79,8 +78,11 @@ class _AuthScreenState extends State<AuthScreen> {
                           autocorrect: false,
                           textCapitalization: TextCapitalization.none,
                           validator: (value) {
-                            if (!_isValidPassword(value, _kRequiredLength)) {
-                              return 'Password must be at least $_kRequiredLength characters long.';
+                            if (!widget.isValidPassword(
+                              value,
+                              kRequiredLength,
+                            )) {
+                              return 'Password must be at least $kRequiredLength characters long.';
                             }
                             return null;
                           },
@@ -158,21 +160,6 @@ class _AuthScreenState extends State<AuthScreen> {
           },
           transitionDuration: const Duration(milliseconds: 500)),
     );
-  }
-
-  bool _isValidEmail(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return false;
-    }
-    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-    return emailRegex.hasMatch(value);
-  }
-
-  bool _isValidPassword(String? value, int requireLength) {
-    if (value == null || value.trim().isEmpty) {
-      return false;
-    }
-    return value.trim().length >= requireLength;
   }
 
   void _onLogin() {

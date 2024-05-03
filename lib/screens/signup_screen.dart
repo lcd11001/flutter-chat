@@ -1,8 +1,7 @@
+import 'package:chat/screens/form_validation_screen.dart';
 import 'package:flutter/material.dart';
 
-const _kRequiredLength = 6;
-
-class SignupScreen extends StatefulWidget {
+class SignupScreen extends FormValidationScreen {
   const SignupScreen({super.key});
 
   @override
@@ -61,7 +60,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           autocorrect: false,
                           textCapitalization: TextCapitalization.none,
                           validator: (value) {
-                            if (!_isValidEmail(value)) {
+                            if (!widget.isValidEmail(value)) {
                               return 'Please enter a valid email address.';
                             }
                             return null;
@@ -79,8 +78,11 @@ class _SignupScreenState extends State<SignupScreen> {
                           autocorrect: false,
                           textCapitalization: TextCapitalization.none,
                           validator: (value) {
-                            if (!_isValidPassword(value, _kRequiredLength)) {
-                              return 'Password must be at least $_kRequiredLength characters long.';
+                            if (!widget.isValidPassword(
+                              value,
+                              kRequiredLength,
+                            )) {
+                              return 'Password must be at least $kRequiredLength characters long.';
                             }
                             return null;
                           },
@@ -97,10 +99,14 @@ class _SignupScreenState extends State<SignupScreen> {
                           autocorrect: false,
                           textCapitalization: TextCapitalization.none,
                           validator: (value) {
-                            if (!_isValidPassword(value, _kRequiredLength)) {
-                              return 'Password must be at least $_kRequiredLength characters long.';
+                            if (!widget.isValidPassword(
+                              value,
+                              kRequiredLength,
+                            )) {
+                              return 'Password must be at least $kRequiredLength characters long.';
                             }
-                            if (!_isValidConfirmPassword(value)) {
+                            if (!widget.isValidConfirmPassword(
+                                value, _passwordController.text)) {
                               return 'Passwords do not match.';
                             }
                             return null;
@@ -154,28 +160,6 @@ class _SignupScreenState extends State<SignupScreen> {
 
   void _openAuthScreen() {
     Navigator.of(context).pop();
-  }
-
-  bool _isValidEmail(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return false;
-    }
-    final emailRegExp = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-    return emailRegExp.hasMatch(value);
-  }
-
-  bool _isValidPassword(String? value, int requireLength) {
-    if (value == null || value.trim().isEmpty) {
-      return false;
-    }
-    return value.trim().length >= requireLength;
-  }
-
-  bool _isValidConfirmPassword(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return false;
-    }
-    return value == _passwordController.text;
   }
 
   void _onSignUp() {

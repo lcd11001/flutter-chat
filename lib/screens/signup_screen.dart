@@ -1,14 +1,14 @@
-import 'package:chat/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
-class AuthScreen extends StatefulWidget {
-  const AuthScreen({super.key});
+class SignupScreen extends StatefulWidget {
+  const SignupScreen({super.key});
 
   @override
-  State<StatefulWidget> createState() => _AuthScreenState();
+  State<StatefulWidget> createState() => _SignupScreenState();
 }
 
-class _AuthScreenState extends State<AuthScreen> {
+class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -60,6 +60,16 @@ class _AuthScreenState extends State<AuthScreen> {
                           ),
                           obscureText: true,
                           keyboardType: TextInputType.visiblePassword,
+                          textInputAction: TextInputAction.next,
+                          autocorrect: false,
+                          textCapitalization: TextCapitalization.none,
+                        ),
+                        TextFormField(
+                          decoration: const InputDecoration(
+                            labelText: 'Confirm Password',
+                          ),
+                          obscureText: true,
+                          keyboardType: TextInputType.visiblePassword,
                           textInputAction: TextInputAction.done,
                           autocorrect: false,
                           textCapitalization: TextCapitalization.none,
@@ -74,22 +84,22 @@ class _AuthScreenState extends State<AuthScreen> {
                               foregroundColor: colorScheme.onPrimary,
                             ),
                             onPressed: () {},
-                            child: const Text('Login'),
+                            child: const Text('Sign Up'),
                           ),
                         ),
                         SizedBox(
                           width: 200,
                           height: 50,
                           child: TextButton(
-                            onPressed: _openSignupScreen,
-                            child: const Text('Create Account'),
+                            onPressed: _openAuthScreen,
+                            child: const Text('I have an account'),
                           ),
                         ),
                       ],
                     ),
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -97,11 +107,7 @@ class _AuthScreenState extends State<AuthScreen> {
     );
   }
 
-  void _openSignupScreen() {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => const SignupScreen(),
-      ),
-    );
+  void _openAuthScreen() {
+    Navigator.of(context).pop();
   }
 }

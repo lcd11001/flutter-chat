@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+
+const _kRequiredLength = 6;
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -9,6 +10,11 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -43,6 +49,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Form(
+                    key: _formKey,
                     child: Column(
                       children: [
                         TextFormField(
@@ -53,6 +60,14 @@ class _SignupScreenState extends State<SignupScreen> {
                           textInputAction: TextInputAction.next,
                           autocorrect: false,
                           textCapitalization: TextCapitalization.none,
+                          validator: (value) {
+                            if (!_isValidEmail(value)) {
+                              return 'Please enter a valid email address.';
+                            }
+                            return null;
+                          },
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          controller: _emailController,
                         ),
                         TextFormField(
                           decoration: const InputDecoration(
@@ -63,6 +78,14 @@ class _SignupScreenState extends State<SignupScreen> {
                           textInputAction: TextInputAction.next,
                           autocorrect: false,
                           textCapitalization: TextCapitalization.none,
+                          validator: (value) {
+                            if (!_isValidPassword(value, _kRequiredLength)) {
+                              return 'Password must be at least $_kRequiredLength characters long.';
+                            }
+                            return null;
+                          },
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          controller: _passwordController,
                         ),
                         TextFormField(
                           decoration: const InputDecoration(
@@ -73,6 +96,17 @@ class _SignupScreenState extends State<SignupScreen> {
                           textInputAction: TextInputAction.done,
                           autocorrect: false,
                           textCapitalization: TextCapitalization.none,
+                          validator: (value) {
+                            if (!_isValidPassword(value, _kRequiredLength)) {
+                              return 'Password must be at least $_kRequiredLength characters long.';
+                            }
+                            if (!_isValidConfirmPassword(value)) {
+                              return 'Passwords do not match.';
+                            }
+                            return null;
+                          },
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          controller: _confirmPasswordController,
                         ),
                         const SizedBox(height: 20),
                         SizedBox(
@@ -80,10 +114,10 @@ class _SignupScreenState extends State<SignupScreen> {
                           height: 50,
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: colorScheme.primary,
-                              foregroundColor: colorScheme.onPrimary,
+                              backgroundColor: colorScheme.primaryContainer,
+                              foregroundColor: colorScheme.onPrimaryContainer,
                             ),
-                            onPressed: () {},
+                            onPressed: _onSignUp,
                             child: const Text('Sign Up'),
                           ),
                         ),
@@ -120,5 +154,34 @@ class _SignupScreenState extends State<SignupScreen> {
 
   void _openAuthScreen() {
     Navigator.of(context).pop();
+  }
+
+  bool _isValidEmail(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return false;
+    }
+    final emailRegExp = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    return emailRegExp.hasMatch(value);
+  }
+
+  bool _isValidPassword(String? value, int requireLength) {
+    if (value == null || value.trim().isEmpty) {
+      return false;
+    }
+    return value.trim().length >= requireLength;
+  }
+
+  bool _isValidConfirmPassword(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return false;
+    }
+    return value == _passwordController.text;
+  }
+
+  void _onSignUp() {
+    if (_formKey.currentState!.validate()) {
+      debugPrint(
+          'Sign up... ${_emailController.text} : ${_passwordController.text}');
+    }
   }
 }

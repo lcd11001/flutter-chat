@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "873677317681",
+    "firebase_url": "https://flutter-test-6364b-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "flutter-test-6364b",
+    "storage_bucket": "flutter-test-6364b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:873677317681:android:d84448886f5eb18b849710",
+        "android_client_info": {
+          "package_name": "com.lcdsoft.flutter.chat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9EeyMlvoYAb9dq5r07SOQK6GiRg-U5pE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:873677317681:android:9a217ddb5470c7c4849710",
+        "android_client_info": {
+          "package_name": "com.mycompany.testproductlistapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9EeyMlvoYAb9dq5r07SOQK6GiRg-U5pE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:873677317681:android:53053774743e0047849710",
+        "android_client_info": {
+          "package_name": "com.mycompany.testsocialapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9EeyMlvoYAb9dq5r07SOQK6GiRg-U5pE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

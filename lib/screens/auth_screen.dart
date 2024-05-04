@@ -1,5 +1,8 @@
+import 'package:chat/firebase/firebase_auth_helper.dart';
 import 'package:chat/screens/form_validation_screen.dart';
+import 'package:chat/screens/main_screen.dart';
 import 'package:chat/screens/signup_screen.dart';
+import 'package:chat/utils/page_route_helper.dart';
 import 'package:flutter/material.dart';
 
 class AuthScreen extends FormValidationScreen {
@@ -135,37 +138,40 @@ class _AuthScreenState extends State<AuthScreen> {
 
   void _openSignupScreen() {
     Navigator.of(context).push(
-      PageRouteBuilder(
-          pageBuilder: (context, animation, secondaryAnimation) {
-            return const SignupScreen();
-          },
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            var begin = const Offset(0.0, 1.0);
-            var end = Offset.zero;
-            var curve = Curves.easeInOut;
-            var tween = Tween(
-              begin: begin,
-              end: end,
-            ).chain(
-              CurveTween(
-                curve: curve,
-              ),
-            );
-            var offsetAnimation = animation.drive(tween);
-
-            return SlideTransition(
-              position: offsetAnimation,
-              child: child,
-            );
-          },
-          transitionDuration: const Duration(milliseconds: 500)),
+      PageRouteHelper.slideInRoute(
+        const SignupScreen(),
+        transitionType: PageTransitionType.slideInFromRight,
+      ),
     );
   }
 
   void _onLogin() {
-    if (_formKey.currentState!.validate()) {
-      debugPrint(
-          'Processing Login... ${_emailController.text} : ${_passwordController.text}');
+    if (!_formKey.currentState!.validate()) {
+      return;
     }
+
+    FirebaseAuthHelper()
+        .signInWithEmailAndPassword(
+      email: _emailController.text,
+      password: _passwordController.text,
+    )
+        .then(
+      (user) {
+        if (user != null) {
+          widget.showSnackBar(context, 'Login successful: ${user.email}');
+          Navigator.of(context).pushReplacement(
+            PageRouteHelper.slideInRoute(
+              const MainScreen(),
+              transitionType: PageTransitionType.slideInFromRight,
+            ),
+          );
+        } else {
+          widget.showSnackBar(context, 'Login failed');
+        }
+      },
+      onError: (e) {
+        widget.showSnackBar(context, 'Login error: ${e.message ?? e}');
+      },
+    );
   }
 }

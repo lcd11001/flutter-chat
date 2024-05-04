@@ -1,3 +1,4 @@
+import 'package:chat/firebase/firebase_auth_helper.dart';
 import 'package:chat/screens/form_validation_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -163,9 +164,27 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   void _onSignUp() {
-    if (_formKey.currentState!.validate()) {
-      debugPrint(
-          'Sign up... ${_emailController.text} : ${_passwordController.text}');
+    if (!_formKey.currentState!.validate()) {
+      return;
     }
+
+    FirebaseAuthHelper()
+        .createUserWithEmailAndPassword(
+      email: _emailController.text,
+      password: _passwordController.text,
+    )
+        .then(
+      (user) {
+        if (user != null) {
+          widget.showSnackBar(context, 'Sign up successful: ${user.email}');
+          Navigator.of(context).pop();
+        } else {
+          widget.showSnackBar(context, 'Sign up failed');
+        }
+      },
+      onError: (e) {
+        widget.showSnackBar(context, 'Sign up error: ${e.message ?? e}');
+      },
+    );
   }
 }

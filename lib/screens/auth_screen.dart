@@ -3,6 +3,7 @@ import 'package:chat/screens/form_validation_screen.dart';
 import 'package:chat/screens/main_screen.dart';
 import 'package:chat/screens/signup_screen.dart';
 import 'package:chat/utils/page_route_helper.dart';
+
 import 'package:flutter/material.dart';
 
 class AuthScreen extends FormValidationScreen {
@@ -167,15 +168,7 @@ class _AuthScreenState extends State<AuthScreen> {
     )
         .then(
       (user) {
-        if (user != null) {
-          widget.showSnackBar(context, 'Login successful: ${user.email}');
-          Navigator.of(context).pushReplacement(
-            PageRouteHelper.slideInRoute(
-              const MainScreen(),
-              transitionType: PageTransitionType.slideInFromRight,
-            ),
-          );
-        } else {
+        if (user == null) {
           widget.showSnackBar(context, 'Login failed');
         }
       },

@@ -1,5 +1,6 @@
 import 'package:chat/firebase/firebase_auth_helper.dart';
 import 'package:chat/screens/form_validation_screen.dart';
+
 import 'package:flutter/material.dart';
 
 class SignupScreen extends FormValidationScreen {

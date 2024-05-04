@@ -9,6 +9,8 @@ class FirebaseAuthHelper {
 
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
+  Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
+
   Future<User?> createUserWithEmailAndPassword({
     required String email,
     required String password,

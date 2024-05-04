@@ -136,13 +136,22 @@ class _AuthScreenState extends State<AuthScreen> {
     );
   }
 
-  void _openSignupScreen() {
-    Navigator.of(context).push(
-      PageRouteHelper.slideInRoute(
+  void _openSignupScreen() async {
+    final signUpInfo = await Navigator.of(context).push(
+      PageRouteHelper.slideInRoute<Map<String, String>>(
         const SignupScreen(),
         transitionType: PageTransitionType.slideInFromRight,
       ),
     );
+
+    // debugPrint('signUpInfo: $signUpInfo');
+
+    if (signUpInfo != null) {
+      setState(() {
+        _emailController.text = signUpInfo['email'] ?? '';
+        _passwordController.text = signUpInfo['password'] ?? '';
+      });
+    }
   }
 
   void _onLogin() {
@@ -154,6 +163,7 @@ class _AuthScreenState extends State<AuthScreen> {
         .signInWithEmailAndPassword(
       email: _emailController.text,
       password: _passwordController.text,
+      forceVerifyEmail: true,
     )
         .then(
       (user) {

@@ -8,13 +8,13 @@ enum PageTransitionType {
 }
 
 class PageRouteHelper {
-  static PageRouteBuilder slideInRoute(
+  static PageRouteBuilder<T> slideInRoute<T>(
     Widget page, {
     Duration duration = const Duration(milliseconds: 500),
     PageTransitionType transitionType = PageTransitionType.slideInFromRight,
     Curve curve = Curves.easeInOut,
   }) {
-    return PageRouteBuilder(
+    return PageRouteBuilder<T>(
       pageBuilder: (context, animation, secondaryAnimation) => page,
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         Offset begin;

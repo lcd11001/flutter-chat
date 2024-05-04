@@ -172,12 +172,18 @@ class _SignupScreenState extends State<SignupScreen> {
         .createUserWithEmailAndPassword(
       email: _emailController.text,
       password: _passwordController.text,
+      forceVerifyEmail: true,
     )
         .then(
       (user) {
         if (user != null) {
           widget.showSnackBar(context, 'Sign up successful: ${user.email}');
-          Navigator.of(context).pop();
+          Navigator.of(context).pop<Map<String, String>>(
+            <String, String>{
+              'email': _emailController.text,
+              'password': _passwordController.text,
+            },
+          );
         } else {
           widget.showSnackBar(context, 'Sign up failed');
         }

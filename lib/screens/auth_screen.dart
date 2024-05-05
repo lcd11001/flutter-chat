@@ -16,6 +16,7 @@ class _AuthScreenState extends State<AuthScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool _isLoggingIn = false;
 
   @override
   Widget build(BuildContext context) {
@@ -96,13 +97,22 @@ class _AuthScreenState extends State<AuthScreen> {
                         SizedBox(
                           width: 200,
                           height: 50,
-                          child: ElevatedButton(
+                          child: ElevatedButton.icon(
+                            icon: _isLoggingIn
+                                ? SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(
+                                      color: colorScheme.onPrimaryContainer,
+                                    ),
+                                  )
+                                : const Icon(Icons.login),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: colorScheme.primaryContainer,
                               foregroundColor: colorScheme.onPrimaryContainer,
                             ),
                             onPressed: _onLogin,
-                            child: const Text('Login'),
+                            label: const Text('Login'),
                           ),
                         ),
                         SizedBox(
@@ -159,6 +169,10 @@ class _AuthScreenState extends State<AuthScreen> {
       return;
     }
 
+    setState(() {
+      _isLoggingIn = true;
+    });
+
     FirebaseAuthHelper()
         .signInWithEmailAndPassword(
       email: _emailController.text,
@@ -167,12 +181,21 @@ class _AuthScreenState extends State<AuthScreen> {
     )
         .then(
       (user) {
+        setState(() {
+          _isLoggingIn = false;
+        });
+
         if (user == null) {
           widget.showSnackBar(context, 'Login failed');
         }
       },
-      onError: (e) {
-        widget.showSnackBar(context, 'Login error: ${e.message ?? e}');
+    ).onError(
+      (error, stackTrace) {
+        setState(() {
+          _isLoggingIn = false;
+        });
+
+        widget.showSnackBar(context, 'Login failed: $error');
       },
     );
   }

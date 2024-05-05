@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:chat/firebase/firebase_auth_helper.dart';
+import 'package:chat/firebase/firebase_storage_helper.dart';
 import 'package:chat/screens/form_validation_screen.dart';
 import 'package:chat/widgets/user_image_picker.dart';
 
@@ -16,6 +19,8 @@ class _SignupScreenState extends State<SignupScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  File? _avatarImage;
+  bool _isUploading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +36,8 @@ class _SignupScreenState extends State<SignupScreen> {
               UserImagePicker(
                 radius: 80,
                 pickedImage: (image) {
-                  // ignore: avoid_print
-                  print('pickedImage: ${image.path}');
+                  debugPrint('pickedImage: ${image.path}');
+                  _avatarImage = image;
                 },
               ),
               Card(
@@ -115,13 +120,22 @@ class _SignupScreenState extends State<SignupScreen> {
                         SizedBox(
                           width: 200,
                           height: 50,
-                          child: ElevatedButton(
+                          child: ElevatedButton.icon(
                             style: ElevatedButton.styleFrom(
                               backgroundColor: colorScheme.primaryContainer,
                               foregroundColor: colorScheme.onPrimaryContainer,
                             ),
                             onPressed: _onSignUp,
-                            child: const Text('Sign Up'),
+                            icon: _isUploading
+                                ? SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(
+                                      color: colorScheme.onPrimaryContainer,
+                                    ),
+                                  )
+                                : const Icon(Icons.person_add),
+                            label: const Text('Sign Up'),
                           ),
                         ),
                         SizedBox(
@@ -164,6 +178,15 @@ class _SignupScreenState extends State<SignupScreen> {
       return;
     }
 
+    if (_avatarImage == null) {
+      widget.showSnackBar(context, 'Please pick an avatar image');
+      return;
+    }
+
+    setState(() {
+      _isUploading = true;
+    });
+
     FirebaseAuthHelper()
         .createUserWithEmailAndPassword(
       email: _emailController.text,
@@ -174,19 +197,39 @@ class _SignupScreenState extends State<SignupScreen> {
       (user) {
         if (user != null) {
           widget.showSnackBar(context, 'Sign up successful: ${user.email}');
-          Navigator.of(context).pop<Map<String, String>>(
-            <String, String>{
-              'email': _emailController.text,
-              'password': _passwordController.text,
-            },
+          return FirebaseStorageHelper().upload(
+            'user_avatars',
+            '${user.uid}.jpg',
+            _avatarImage!,
           );
         } else {
           widget.showSnackBar(context, 'Sign up failed');
+          return Future.value("");
         }
       },
-      onError: (e) {
-        widget.showSnackBar(context, 'Sign up error: ${e.message ?? e}');
+    ).then(
+      (url) {
+        setState(() {
+          _isUploading = false;
+        });
+
+        if (url.isEmpty) {
+          widget.showSnackBar(context, 'Upload avatar image failed');
+        }
+        Navigator.of(context).pop<Map<String, String>>(
+          <String, String>{
+            'email': _emailController.text,
+            'password': _passwordController.text,
+            'avatarUrl': url,
+          },
+        );
       },
-    );
+    ).onError((error, stackTrace) {
+      widget.showSnackBar(context, 'Sign up error: $error');
+
+      setState(() {
+        _isUploading = false;
+      });
+    });
   }
 }

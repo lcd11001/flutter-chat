@@ -6,7 +6,11 @@ import 'package:chat/utils/page_route_helper.dart';
 import 'package:flutter/material.dart';
 
 class AuthScreen extends FormValidationScreen {
-  const AuthScreen({super.key});
+  final bool forceValidateEmail;
+  const AuthScreen({
+    super.key,
+    required this.forceValidateEmail,
+  });
 
   @override
   State<StatefulWidget> createState() => _AuthScreenState();
@@ -149,7 +153,9 @@ class _AuthScreenState extends State<AuthScreen> {
   void _openSignupScreen() async {
     final signUpInfo = await Navigator.of(context).push(
       PageRouteHelper.slideInRoute<Map<String, String>>(
-        const SignupScreen(),
+        SignupScreen(
+          forceValidateEmail: widget.forceValidateEmail,
+        ),
         transitionType: PageTransitionType.slideInFromRight,
       ),
     );
@@ -177,7 +183,7 @@ class _AuthScreenState extends State<AuthScreen> {
         .signInWithEmailAndPassword(
       email: _emailController.text,
       password: _passwordController.text,
-      forceVerifyEmail: true,
+      forceVerifyEmail: widget.forceValidateEmail,
     )
         .then(
       (user) {

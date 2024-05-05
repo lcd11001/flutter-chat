@@ -8,7 +8,11 @@ import 'package:chat/widgets/user_image_picker.dart';
 import 'package:flutter/material.dart';
 
 class SignupScreen extends FormValidationScreen {
-  const SignupScreen({super.key});
+  final bool forceValidateEmail;
+  const SignupScreen({
+    super.key,
+    required this.forceValidateEmail,
+  });
 
   @override
   State<StatefulWidget> createState() => _SignupScreenState();
@@ -191,7 +195,7 @@ class _SignupScreenState extends State<SignupScreen> {
         .createUserWithEmailAndPassword(
       email: _emailController.text,
       password: _passwordController.text,
-      forceVerifyEmail: true,
+      forceVerifyEmail: widget.forceValidateEmail,
     )
         .then(
       (user) {

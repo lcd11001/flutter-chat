@@ -13,11 +13,17 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MainApp());
+  runApp(const MainApp(
+    forceValidateEmail: false,
+  ));
 }
 
 class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+  final bool forceValidateEmail;
+  const MainApp({
+    super.key,
+    required this.forceValidateEmail,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,18 +31,13 @@ class MainApp extends StatelessWidget {
       home: StreamBuilder(
         stream: FirebaseAuthHelper().authStateChanges,
         builder: (ctx, snapshot) {
-          debugPrint('authStateChanges: state ${snapshot.connectionState}');
-
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          debugPrint('authStateChanges: hasData ${snapshot.hasData}');
-          debugPrint('authStateChanges: data ${snapshot.data}');
-
           if (snapshot.hasData) {
             final user = snapshot.data;
-            if (user != null && user.emailVerified) {
+            if (user != null && (!forceValidateEmail || user.emailVerified)) {
               // return const MainScreen();
               return AnimatedSwitcher(
                 duration: const Duration(milliseconds: 500),
@@ -53,7 +54,9 @@ class MainApp extends StatelessWidget {
             transitionBuilder: (child, animation) {
               return PageRouteHelper.slideIn(child, animation);
             },
-            child: const AuthScreen(),
+            child: AuthScreen(
+              forceValidateEmail: forceValidateEmail,
+            ),
           );
         },
       ),

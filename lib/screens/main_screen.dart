@@ -24,7 +24,7 @@ class MainScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Center(
+      body: const Center(
         child: Text('Welcome to Chat App!'),
       ),
     );

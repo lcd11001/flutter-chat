@@ -1,5 +1,6 @@
 import 'package:chat/firebase/firebase_auth_helper.dart';
 import 'package:chat/screens/form_validation_screen.dart';
+import 'package:chat/widgets/user_image_picker.dart';
 
 import 'package:flutter/material.dart';
 
@@ -27,18 +28,12 @@ class _SignupScreenState extends State<SignupScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                margin: const EdgeInsets.only(
-                  top: 30,
-                  bottom: 20,
-                  left: 20,
-                  right: 20,
-                ),
-                width: 200,
-                child: Image.asset(
-                  'assets/images/chat.png',
-                  fit: BoxFit.cover,
-                ),
+              UserImagePicker(
+                radius: 80,
+                pickedImage: (image) {
+                  // ignore: avoid_print
+                  print('pickedImage: ${image.path}');
+                },
               ),
               Card(
                 margin: const EdgeInsets.only(

@@ -6,6 +6,7 @@ import 'package:chat/utils/page_route_helper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 Future<void> main() async {
@@ -14,7 +15,7 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(const MainApp(
-    forceValidateEmail: false,
+    forceValidateEmail: kReleaseMode,
   ));
 }
 

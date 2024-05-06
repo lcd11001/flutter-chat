@@ -53,7 +53,12 @@ android {
         applicationId "com.lcdsoft.flutter.chat"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion flutter.minSdkVersion
+
+        // Begin LCD modified for Firebase
+        multiDexEnabled true
+        minSdkVersion 19
+        // End LCD modified for Firebase
+
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName

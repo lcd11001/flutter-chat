@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:chat/firebase/firebase_auth_helper.dart';
+import 'package:chat/firebase/firebase_firestore_helper.dart';
 import 'package:chat/firebase/firebase_storage_helper.dart';
 import 'package:chat/screens/form_validation_screen.dart';
 import 'package:chat/widgets/user_image_picker.dart';
@@ -24,6 +25,8 @@ class _SignupScreenState extends State<SignupScreen> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   File? _avatarImage;
+  String _avatarUrl = '';
+  String _userId = '';
   bool _isUploading = false;
 
   @override
@@ -187,6 +190,8 @@ class _SignupScreenState extends State<SignupScreen> {
       return;
     }
 
+    bool isSuccess = true;
+
     setState(() {
       _isUploading = true;
     });
@@ -200,6 +205,7 @@ class _SignupScreenState extends State<SignupScreen> {
         .then(
       (user) {
         if (user != null) {
+          _userId = user.uid;
           widget.showSnackBar(context, 'Sign up successful: ${user.email}');
           return FirebaseStorageHelper().upload(
             'user_avatars',
@@ -207,33 +213,44 @@ class _SignupScreenState extends State<SignupScreen> {
             _avatarImage!,
           );
         } else {
-          widget.showSnackBar(context, 'Sign up failed');
-          return Future.value("");
+          _userId = '';
+          throw ErrorDescription('Sign up failed');
         }
       },
     ).then(
       (url) {
-        setState(() {
-          _isUploading = false;
-        });
-
         if (url.isEmpty) {
-          widget.showSnackBar(context, 'Upload avatar image failed');
+          throw ErrorDescription('Upload avatar image failed');
         }
+        _avatarUrl = url;
+
+        return FirebaseFirestoreHelper().setData(
+          'users',
+          _userId,
+          <String, dynamic>{
+            'name': _emailController.text.split('@').first,
+            'email': _emailController.text,
+            'avatarUrl': _avatarUrl,
+          },
+        );
+      },
+    ).catchError((error) {
+      widget.showSnackBar(context, 'Sign up error: $error');
+      isSuccess = false;
+    }).whenComplete(() {
+      setState(() {
+        _isUploading = false;
+      });
+
+      if (isSuccess) {
         Navigator.of(context).pop<Map<String, String>>(
           <String, String>{
             'email': _emailController.text,
             'password': _passwordController.text,
-            'avatarUrl': url,
+            'avatarUrl': _avatarUrl,
           },
         );
-      },
-    ).onError((error, stackTrace) {
-      widget.showSnackBar(context, 'Sign up error: $error');
-
-      setState(() {
-        _isUploading = false;
-      });
+      }
     });
   }
 }

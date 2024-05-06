@@ -187,22 +187,19 @@ class _AuthScreenState extends State<AuthScreen> {
     )
         .then(
       (user) {
-        setState(() {
-          _isLoggingIn = false;
-        });
-
         if (user == null) {
-          widget.showSnackBar(context, 'Login failed');
+          throw ErrorDescription(
+              'Unable sing in with the provided credentials');
         }
       },
-    ).onError(
-      (error, stackTrace) {
-        setState(() {
-          _isLoggingIn = false;
-        });
-
+    ).catchError(
+      (error) {
         widget.showSnackBar(context, 'Login failed: $error');
       },
-    );
+    ).whenComplete(() {
+      setState(() {
+        _isLoggingIn = false;
+      });
+    });
   }
 }

@@ -162,7 +162,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
     // debugPrint('signUpInfo: $signUpInfo');
 
-    if (signUpInfo != null) {
+    if (signUpInfo != null && context.mounted) {
       setState(() {
         _emailController.text = signUpInfo['email'] ?? '';
         _passwordController.text = signUpInfo['password'] ?? '';

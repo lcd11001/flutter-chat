@@ -28,6 +28,9 @@ abstract class FormValidationScreen extends StatefulWidget {
   }
 
   void showSnackBar(BuildContext context, String message) {
+    if (!context.mounted) {
+      return;
+    }
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

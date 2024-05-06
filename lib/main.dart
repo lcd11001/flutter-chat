@@ -14,9 +14,11 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MainApp(
-    forceValidateEmail: kReleaseMode,
-  ));
+  runApp(
+    const MainApp(
+      forceValidateEmail: kReleaseMode,
+    ),
+  );
 }
 
 class MainApp extends StatelessWidget {
@@ -30,11 +32,14 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: StreamBuilder(
-        stream: FirebaseAuthHelper().authStateChanges,
+        stream: FirebaseAuthHelper().userChanges,
         builder: (ctx, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
+
+          // debugPrint('snapshot.hasData: ${snapshot.hasData}');
+          // debugPrint('snapshot.data: ${snapshot.data}');
 
           if (snapshot.hasData) {
             final user = snapshot.data;

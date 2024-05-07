@@ -11,6 +11,12 @@ class ChatMessageList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (messages.isEmpty) {
+      return const Center(
+        child: Text('No messages found. Start chatting!'),
+      );
+    }
+
     return ListView.builder(
       itemCount: messages.length,
       itemBuilder: (context, index) {

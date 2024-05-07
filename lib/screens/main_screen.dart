@@ -1,4 +1,6 @@
 import 'package:chat/firebase/firebase_auth_helper.dart';
+import 'package:chat/widgets/chat_message_list.dart';
+import 'package:chat/widgets/new_message.dart';
 import 'package:flutter/material.dart';
 
 class MainScreen extends StatelessWidget {
@@ -24,8 +26,17 @@ class MainScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: const Center(
-        child: Text('Welcome to Chat App!'),
+      body: const Column(
+        children: [
+          Expanded(
+            child: ChatMessageList(
+              messages: [],
+            ),
+          ),
+          NewMessage(
+            chatRoomId: 'chatRoomId',
+          ),
+        ],
       ),
     );
   }

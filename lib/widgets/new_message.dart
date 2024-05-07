@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 
 class NewMessage extends StatefulWidget {
   final String chatRoomId;
-  const NewMessage(this.chatRoomId, {super.key});
+  const NewMessage({
+    super.key,
+    required this.chatRoomId,
+  });
 
   @override
   State<StatefulWidget> createState() => _NewMessageState();
@@ -10,6 +13,12 @@ class NewMessage extends StatefulWidget {
 
 class _NewMessageState extends State<NewMessage> {
   final _messageController = TextEditingController();
+
+  @override
+  void dispose() {
+    _messageController.dispose();
+    super.dispose();
+  }
 
   void _sendMessage() {
     if (_messageController.text.isEmpty) {
@@ -23,6 +32,8 @@ class _NewMessageState extends State<NewMessage> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       margin: const EdgeInsets.only(top: 8.0),
       padding: const EdgeInsets.all(8.0),
@@ -31,11 +42,15 @@ class _NewMessageState extends State<NewMessage> {
           Expanded(
             child: TextField(
               controller: _messageController,
+              textCapitalization: TextCapitalization.sentences,
+              autocorrect: true,
+              keyboardType: TextInputType.text,
               decoration: const InputDecoration(labelText: 'Send a message...'),
             ),
           ),
           IconButton(
             icon: const Icon(Icons.send),
+            color: colorScheme.primary,
             onPressed: _sendMessage,
           ),
         ],

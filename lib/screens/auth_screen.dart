@@ -1,4 +1,5 @@
 import 'package:chat/firebase/firebase_auth_helper.dart';
+import 'package:chat/models/user_info.dart';
 import 'package:chat/screens/form_validation_screen.dart';
 import 'package:chat/screens/signup_screen.dart';
 import 'package:chat/utils/page_route_helper.dart';
@@ -21,6 +22,7 @@ class _AuthScreenState extends State<AuthScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isLoggingIn = false;
+  bool _isFirstLogin = false;
 
   @override
   void dispose() {
@@ -32,6 +34,7 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
       backgroundColor: colorScheme.primary,
@@ -66,6 +69,15 @@ class _AuthScreenState extends State<AuthScreen> {
                     key: _formKey,
                     child: Column(
                       children: [
+                        if (_isFirstLogin)
+                          Text(
+                            widget.forceValidateEmail
+                                ? 'Account created successfully. Please validate your email address first.'
+                                : 'Account created successfully. Please login.',
+                            style: textTheme.bodyMedium!.copyWith(
+                              color: colorScheme.onSecondaryContainer,
+                            ),
+                          ),
                         TextFormField(
                           decoration: const InputDecoration(
                             labelText: 'Email Address',
@@ -159,7 +171,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
   void _openSignupScreen() async {
     final signUpInfo = await Navigator.of(context).push(
-      PageRouteHelper.slideInRoute<Map<String, String>>(
+      PageRouteHelper.slideInRoute<UserInfo>(
         SignupScreen(
           forceValidateEmail: widget.forceValidateEmail,
         ),
@@ -171,8 +183,9 @@ class _AuthScreenState extends State<AuthScreen> {
 
     if (signUpInfo != null && context.mounted) {
       setState(() {
-        _emailController.text = signUpInfo['email'] ?? '';
-        _passwordController.text = signUpInfo['password'] ?? '';
+        _emailController.text = signUpInfo.email;
+        _passwordController.text = '';
+        _isFirstLogin = true;
       });
     }
   }

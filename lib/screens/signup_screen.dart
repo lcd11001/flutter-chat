@@ -5,6 +5,7 @@ import 'package:chat/firebase/firebase_firestore_helper.dart';
 import 'package:chat/firebase/firebase_storage_helper.dart';
 import 'package:chat/screens/form_validation_screen.dart';
 import 'package:chat/widgets/user_image_picker.dart';
+import 'package:chat/models/user_info.dart';
 
 import 'package:flutter/material.dart';
 
@@ -26,8 +27,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   File? _avatarImage;
-  String _avatarUrl = '';
-  String _userId = '';
+  UserInfo? _userInfo;
   bool _isUploading = false;
 
   @override
@@ -233,7 +233,12 @@ class _SignupScreenState extends State<SignupScreen> {
         .then(
       (user) {
         if (user != null) {
-          _userId = user.uid;
+          _userInfo = UserInfo(
+            id: user.uid,
+            name: _usernameController.text,
+            email: _emailController.text,
+            avatarUrl: '',
+          );
           widget.showSnackBar(context, 'Sign up successful: ${user.email}');
           return FirebaseStorageHelper().upload(
             'user_avatars',
@@ -241,7 +246,6 @@ class _SignupScreenState extends State<SignupScreen> {
             _avatarImage!,
           );
         } else {
-          _userId = '';
           throw ErrorDescription('Sign up failed');
         }
       },
@@ -250,19 +254,18 @@ class _SignupScreenState extends State<SignupScreen> {
         if (url.isEmpty) {
           throw ErrorDescription('Upload avatar image failed');
         }
-        _avatarUrl = url;
+        _userInfo = _userInfo!.copyWith(avatarUrl: url);
 
         return FirebaseFirestoreHelper().setData(
           'users',
-          _userId,
-          <String, dynamic>{
-            'name': _usernameController.text,
-            'email': _emailController.text,
-            'avatarUrl': _avatarUrl,
-          },
+          _userInfo!.id,
+          _userInfo!.toJson(),
         );
       },
-    ).catchError((error) {
+    ).then((value) {
+      debugPrint('set user info success: $value');
+      isSuccess = value;
+    }).catchError((error) {
       widget.showSnackBar(context, 'Sign up error: $error');
       isSuccess = false;
     }).whenComplete(() {
@@ -271,12 +274,8 @@ class _SignupScreenState extends State<SignupScreen> {
       });
 
       if (isSuccess) {
-        Navigator.of(context).pop<Map<String, String>>(
-          <String, String>{
-            'email': _emailController.text,
-            'password': _passwordController.text,
-            'avatarUrl': _avatarUrl,
-          },
+        Navigator.of(context).pop<UserInfo>(
+          _userInfo!,
         );
       }
     });

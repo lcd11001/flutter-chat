@@ -26,10 +26,12 @@ class _NewMessageState extends State<NewMessage> {
   }
 
   void _sendMessage() {
-    _submitMessage(_messageController.text);
-
+    final message = _messageController.text.trim();
+    // close the keyboard
     FocusScope.of(context).unfocus();
     _messageController.clear();
+
+    _submitMessage(message);
   }
 
   Future<void> _submitMessage(String message) async {

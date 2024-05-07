@@ -21,6 +21,7 @@ class SignupScreen extends FormValidationScreen {
 
 class _SignupScreenState extends State<SignupScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
@@ -62,6 +63,24 @@ class _SignupScreenState extends State<SignupScreen> {
                       children: [
                         TextFormField(
                           decoration: const InputDecoration(
+                            labelText: 'Username',
+                          ),
+                          keyboardType: TextInputType.text,
+                          textInputAction: TextInputAction.next,
+                          autocorrect: false,
+                          textCapitalization: TextCapitalization.none,
+                          validator: (value) {
+                            if (!widget.isValidUsername(
+                                value, kRequiredUsernameLength)) {
+                              return 'Username must be at least $kRequiredUsernameLength characters long.';
+                            }
+                            return null;
+                          },
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          controller: _usernameController,
+                        ),
+                        TextFormField(
+                          decoration: const InputDecoration(
                             labelText: 'Email Address',
                           ),
                           keyboardType: TextInputType.emailAddress,
@@ -89,9 +108,9 @@ class _SignupScreenState extends State<SignupScreen> {
                           validator: (value) {
                             if (!widget.isValidPassword(
                               value,
-                              kRequiredLength,
+                              kRequiredPasswordLength,
                             )) {
-                              return 'Password must be at least $kRequiredLength characters long.';
+                              return 'Password must be at least $kRequiredPasswordLength characters long.';
                             }
                             return null;
                           },
@@ -110,9 +129,9 @@ class _SignupScreenState extends State<SignupScreen> {
                           validator: (value) {
                             if (!widget.isValidPassword(
                               value,
-                              kRequiredLength,
+                              kRequiredPasswordLength,
                             )) {
-                              return 'Password must be at least $kRequiredLength characters long.';
+                              return 'Password must be at least $kRequiredPasswordLength characters long.';
                             }
                             if (!widget.isValidConfirmPassword(
                                 value, _passwordController.text)) {
@@ -228,7 +247,7 @@ class _SignupScreenState extends State<SignupScreen> {
           'users',
           _userId,
           <String, dynamic>{
-            'name': _emailController.text.split('@').first,
+            'name': _usernameController.text,
             'email': _emailController.text,
             'avatarUrl': _avatarUrl,
           },

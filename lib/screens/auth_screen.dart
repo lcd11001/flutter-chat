@@ -88,9 +88,9 @@ class _AuthScreenState extends State<AuthScreen> {
                           validator: (value) {
                             if (!widget.isValidPassword(
                               value,
-                              kRequiredLength,
+                              kRequiredPasswordLength,
                             )) {
-                              return 'Password must be at least $kRequiredLength characters long.';
+                              return 'Password must be at least $kRequiredPasswordLength characters long.';
                             }
                             return null;
                           },

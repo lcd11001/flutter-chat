@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
 
-const kRequiredLength = 6;
+const kRequiredUsernameLength = 3;
+const kRequiredPasswordLength = 6;
 
 abstract class FormValidationScreen extends StatefulWidget {
   const FormValidationScreen({super.key});
+
+  bool isValidUsername(String? value, int requireLength) {
+    if (value == null || value.trim().isEmpty) {
+      return false;
+    }
+    return value.trim().length >= requireLength;
+  }
 
   bool isValidEmail(String? value) {
     if (value == null || value.trim().isEmpty) {

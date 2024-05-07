@@ -1,6 +1,5 @@
 import 'package:chat/firebase/firebase_auth_helper.dart';
-import 'package:chat/widgets/chat_message_list.dart';
-import 'package:chat/widgets/new_message.dart';
+import 'package:chat/widgets/user_list.dart';
 import 'package:flutter/material.dart';
 
 class MainScreen extends StatelessWidget {
@@ -26,17 +25,13 @@ class MainScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: const Column(
-        children: [
-          Expanded(
-            child: ChatMessageList(
-              messages: [],
-            ),
-          ),
-          NewMessage(
-            chatRoomId: 'chatRoomId',
-          ),
-        ],
+      body: Expanded(
+        child: UserList(
+          firestoreCollection: 'users',
+          onTap: (user) {
+            debugPrint('User tapped: ${user.name}');
+          },
+        ),
       ),
     );
   }

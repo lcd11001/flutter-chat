@@ -1,16 +1,19 @@
+import 'package:chat/models/chat_message.dart';
 import 'package:chat/widgets/chat_message_item.dart';
 import 'package:flutter/material.dart';
 
 class ChatMessageList extends StatelessWidget {
-  final List<ChatMessageItem> messages;
+  final String roomId;
 
   const ChatMessageList({
     super.key,
-    required this.messages,
+    required this.roomId,
   });
 
   @override
   Widget build(BuildContext context) {
+    final messages = [];
+
     if (messages.isEmpty) {
       return const Center(
         child: Text('No messages found. Start chatting!'),

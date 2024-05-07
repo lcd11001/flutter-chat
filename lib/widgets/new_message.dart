@@ -6,10 +6,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class NewMessage extends StatefulWidget {
-  final String chatRoomId;
+  final String roomId;
   const NewMessage({
     super.key,
-    required this.chatRoomId,
+    required this.roomId,
   });
 
   @override
@@ -55,7 +55,7 @@ class _NewMessageState extends State<NewMessage> {
     );
 
     final success = await FirebaseFirestoreHelper().addDocument(
-      'chatRooms/${widget.chatRoomId}/messages',
+      'chatRooms/${widget.roomId}/messages',
       chatMessage.toJson(),
     );
     debugPrint('send chat message success: $success');

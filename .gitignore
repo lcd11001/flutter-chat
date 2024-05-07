@@ -42,3 +42,5 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 firebase_options.dart
+lib/models/chat_message.freezed.dart
+lib/models/chat_message.g.dart

@@ -1,3 +1,8 @@
+import 'package:chat/firebase/firebase_auth_helper.dart';
+import 'package:chat/firebase/firebase_firestore_helper.dart';
+import 'package:chat/models/chat_message.dart';
+import 'package:chat/models/user_info.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class NewMessage extends StatefulWidget {
@@ -21,13 +26,37 @@ class _NewMessageState extends State<NewMessage> {
   }
 
   void _sendMessage() {
-    if (_messageController.text.isEmpty) {
+    _submitMessage(_messageController.text);
+
+    FocusScope.of(context).unfocus();
+    _messageController.clear();
+  }
+
+  Future<void> _submitMessage(String message) async {
+    if (message.isEmpty) {
       return;
     }
-    FocusScope.of(context).unfocus();
-    debugPrint(widget.chatRoomId);
-    debugPrint(_messageController.text);
-    _messageController.clear();
+
+    final userId = FirebaseAuthHelper().currentUserUid!;
+    final userInfo =
+        await FirebaseFirestoreHelper().getDocument('users', userId);
+    debugPrint('user info: $userInfo');
+    userInfo['id'] = userId;
+
+    final user = UserInfo.fromJson(userInfo);
+    debugPrint('user: $user');
+
+    final chatMessage = ChatMessage(
+      sender: user.id,
+      message: message,
+      timestamp: Timestamp.now(),
+    );
+
+    final success = await FirebaseFirestoreHelper().addDocument(
+      'chatRooms/${widget.chatRoomId}/messages',
+      chatMessage.toJson(),
+    );
+    debugPrint('send chat message success: $success');
   }
 
   @override

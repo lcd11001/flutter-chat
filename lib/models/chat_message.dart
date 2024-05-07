@@ -1,6 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';
 
+// run this command in terminal to generate chat_message.freezed.dart
+// flutter pub run build_runner build --delete-conflicting-outputs
 part 'chat_message.freezed.dart';
 part 'chat_message.g.dart';
 

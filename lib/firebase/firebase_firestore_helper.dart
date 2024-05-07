@@ -10,33 +10,39 @@ class FirebaseFirestoreHelper {
 
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
 
-  Future<void> setData(
+  Future<bool> setData(
       String collection, String id, Map<String, dynamic> data) async {
     try {
       await _firebaseFirestore
           .collection(collection)
           .doc(id)
           .set(data, SetOptions(merge: true));
+      return true;
     } catch (e) {
       debugPrint(e.toString());
     }
+    return false;
   }
 
-  Future<void> updateData(
+  Future<bool> updateData(
       String collection, String id, Map<String, dynamic> data) async {
     try {
       await _firebaseFirestore.collection(collection).doc(id).update(data);
+      return true;
     } catch (e) {
       debugPrint(e.toString());
     }
+    return false;
   }
 
-  Future<void> deleteData(String collection, String id) async {
+  Future<bool> deleteData(String collection, String id) async {
     try {
       await _firebaseFirestore.collection(collection).doc(id).delete();
+      return true;
     } catch (e) {
       debugPrint(e.toString());
     }
+    return false;
   }
 
   Future<List<Map<String, dynamic>>> getData(String collection) async {
@@ -47,5 +53,26 @@ class FirebaseFirestoreHelper {
       debugPrint(e.toString());
       return [];
     }
+  }
+
+  Future<Map<String, dynamic>> getDocument(String collection, String id) async {
+    try {
+      final snapshot =
+          await _firebaseFirestore.collection(collection).doc(id).get();
+      return snapshot.data() ?? {};
+    } catch (e) {
+      debugPrint(e.toString());
+      return {};
+    }
+  }
+
+  Future<bool> addDocument(String collection, Map<String, dynamic> data) async {
+    try {
+      await _firebaseFirestore.collection(collection).add(data);
+      return true;
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return false;
   }
 }

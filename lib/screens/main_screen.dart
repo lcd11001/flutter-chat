@@ -46,6 +46,7 @@ class MainScreen extends StatelessWidget {
       PageRouteHelper.slideInRoute(
         ChatScreen(
           roomId: _getRoomId(user),
+          roomTitle: user.name,
         ),
       ),
     );

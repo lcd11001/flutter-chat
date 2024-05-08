@@ -1,72 +1,27 @@
 import 'package:chat/firebase/firebase_auth_helper.dart';
-import 'package:chat/firebase/firebase_firestore_helper.dart';
 import 'package:chat/models/user_info.dart';
+import 'package:chat/widgets/firestore_list.dart';
 import 'package:chat/widgets/user_item.dart';
 import 'package:flutter/material.dart';
 
-class UserList extends StatelessWidget {
-  final String firestoreCollection;
+class UserList extends FirestoreList {
   final void Function(UserInfo user) onTap;
 
   const UserList({
     super.key,
-    required this.firestoreCollection,
+    required super.firestoreCollection,
     required this.onTap,
   });
 
   @override
-  Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream:
-          FirebaseFirestoreHelper().getCollectionStream(firestoreCollection),
-      builder: (ctx, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-
-        if (snapshot.hasError) {
-          return const Center(
-            child: Text('An error occurred!'),
-          );
-        }
-
-        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return const Center(
-            child: Text('No users found.'),
-          );
-        }
-
-        final users = snapshot.data!.docs.where((doc) {
-          final data = doc.data();
-          final id = data['id'] as String;
-          if (id == FirebaseAuthHelper().currentUserUid) {
-            return false;
-          }
-          return true;
-        }).map((doc) {
-          final data = doc.data();
-          return UserInfo.fromJson(data);
-        }).toList();
-
-        if (users.isEmpty) {
-          return const Center(
-            child: Text('No other users found.'),
-          );
-        }
-
-        return ListView.builder(
-          itemCount: users.length,
-          itemBuilder: (ctx2, index) {
-            final user = users[index];
-            return UserItem(
-              user: user,
-              onTap: onTap,
-            );
-          },
-        );
-      },
+  Widget itemBuilder(BuildContext context, Map<String, dynamic> document) {
+    final user = UserInfo.fromJson(document);
+    if (user.id == FirebaseAuthHelper().currentUserUid) {
+      return const SizedBox.shrink();
+    }
+    return UserItem(
+      user: user,
+      onTap: onTap,
     );
   }
 }

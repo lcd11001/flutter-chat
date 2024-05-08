@@ -24,7 +24,7 @@ class TimestampConverter extends JsonConverter<Timestamp, int> {
 
   @override
   Timestamp fromJson(int json) {
-    return Timestamp(json, 0);
+    return Timestamp.fromMillisecondsSinceEpoch(json);
   }
 
   @override

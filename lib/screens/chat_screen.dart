@@ -4,19 +4,24 @@ import 'package:flutter/material.dart';
 
 class ChatScreen extends StatelessWidget {
   final String roomId;
-  const ChatScreen({super.key, required this.roomId});
+  final String roomTitle;
+  const ChatScreen({
+    super.key,
+    required this.roomId,
+    required this.roomTitle,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(roomId),
+        title: Text(roomTitle),
       ),
       body: Column(
         children: [
           Expanded(
             child: ChatMessageList(
-              roomId: roomId,
+              firestoreCollection: 'chatRooms/$roomId/messages',
             ),
           ),
           NewMessage(

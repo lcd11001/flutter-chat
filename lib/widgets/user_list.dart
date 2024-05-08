@@ -9,6 +9,8 @@ class UserList extends FirestoreList {
 
   const UserList({
     super.key,
+    super.orderField,
+    super.descending,
     required super.firestoreCollection,
     required this.onTap,
   });

@@ -80,4 +80,12 @@ class FirebaseFirestoreHelper {
       String collection) {
     return _firebaseFirestore.collection(collection).snapshots();
   }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> getCollectionStreamWithOrder(
+      String collection, String orderField, bool descending) {
+    return _firebaseFirestore
+        .collection(collection)
+        .orderBy(orderField, descending: descending)
+        .snapshots();
+  }
 }

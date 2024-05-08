@@ -1,13 +1,15 @@
 import 'package:chat/models/chat_message.dart';
 import 'package:chat/widgets/chat_message_item.dart';
 import 'package:chat/widgets/firestore_list.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class ChatMessageList extends FirestoreList {
   const ChatMessageList({
     super.key,
     required super.firestoreCollection,
+    super.orderField,
+    super.descending,
   });
 
   @override
@@ -18,6 +20,7 @@ class ChatMessageList extends FirestoreList {
     );
   }
 
+  /*
   @override
   Iterable<Map<String, dynamic>> sortDocuments(
       List<QueryDocumentSnapshot<Map<String, dynamic>>> documents) {
@@ -30,4 +33,5 @@ class ChatMessageList extends FirestoreList {
 
     return super.sortDocuments(documents);
   }
+  */
 }

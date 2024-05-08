@@ -4,8 +4,15 @@ import 'package:flutter/material.dart';
 
 abstract class FirestoreList extends StatelessWidget {
   final String firestoreCollection;
+  final String? orderField;
+  final bool descending;
 
-  const FirestoreList({super.key, required this.firestoreCollection});
+  const FirestoreList({
+    super.key,
+    required this.firestoreCollection,
+    this.orderField,
+    this.descending = false,
+  });
 
   Widget itemBuilder(BuildContext context, Map<String, dynamic> document);
 
@@ -17,8 +24,10 @@ abstract class FirestoreList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream:
-          FirebaseFirestoreHelper().getCollectionStream(firestoreCollection),
+      stream: orderField != null
+          ? FirebaseFirestoreHelper().getCollectionStreamWithOrder(
+              firestoreCollection, orderField!, descending)
+          : FirebaseFirestoreHelper().getCollectionStream(firestoreCollection),
       builder: (ctx, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(

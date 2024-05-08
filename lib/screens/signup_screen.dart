@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:chat/firebase/firebase_auth_helper.dart';
 import 'package:chat/firebase/firebase_firestore_helper.dart';
 import 'package:chat/firebase/firebase_storage_helper.dart';
+import 'package:chat/models/user_avatars.dart';
 import 'package:chat/screens/form_validation_screen.dart';
 import 'package:chat/widgets/user_image_picker.dart';
 import 'package:chat/models/user_info.dart';
@@ -240,7 +241,7 @@ class _SignupScreenState extends State<SignupScreen> {
           );
           widget.showSnackBar(context, 'Sign up successful: ${user.email}');
           return FirebaseStorageHelper().upload(
-            'user_avatars',
+            UserAvatars.collectionId,
             '${user.uid}.jpg',
             _avatarImage!,
           );
@@ -256,7 +257,7 @@ class _SignupScreenState extends State<SignupScreen> {
         _userInfo = _userInfo!.copyWith(avatarUrl: url);
 
         return FirebaseFirestoreHelper().setData(
-          'users',
+          UserInfo.collectionId,
           _userInfo!.id,
           _userInfo!.toJson(),
         );

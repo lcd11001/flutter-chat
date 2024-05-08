@@ -6,6 +6,8 @@ part 'user_info.g.dart';
 
 @freezed
 class UserInfo with _$UserInfo {
+  static const String collectionId = 'users';
+
   factory UserInfo({
     required String id,
     required String email,

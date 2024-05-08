@@ -32,7 +32,7 @@ class MainScreen extends StatelessWidget {
         ],
       ),
       body: UserList(
-        firestoreCollection: 'users',
+        firestoreCollection: UserInfo.collectionId,
         onTap: (user) {
           _openChatScreen(context, user);
         },

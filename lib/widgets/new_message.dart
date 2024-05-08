@@ -1,7 +1,6 @@
 import 'package:chat/firebase/firebase_auth_helper.dart';
 import 'package:chat/firebase/firebase_firestore_helper.dart';
 import 'package:chat/models/chat_message.dart';
-import 'package:chat/models/user_info.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -48,7 +47,7 @@ class _NewMessageState extends State<NewMessage> {
     );
 
     final success = await FirebaseFirestoreHelper().addDocument(
-      'chatRooms/${widget.roomId}/messages',
+      ChatMessage.firestoreCollection(widget.roomId),
       chatMessage.toJson(),
     );
 

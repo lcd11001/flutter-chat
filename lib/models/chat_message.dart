@@ -9,6 +9,9 @@ part 'chat_message.g.dart';
 
 @freezed
 class ChatMessage with _$ChatMessage {
+  static String firestoreCollection(String roomId) =>
+      'chatRooms/$roomId/messages';
+
   factory ChatMessage({
     required String sender,
     required String message,

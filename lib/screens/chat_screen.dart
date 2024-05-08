@@ -1,3 +1,4 @@
+import 'package:chat/models/chat_message.dart';
 import 'package:chat/widgets/chat_message_list.dart';
 import 'package:chat/widgets/new_message.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +22,9 @@ class ChatScreen extends StatelessWidget {
         children: [
           Expanded(
             child: ChatMessageList(
-              firestoreCollection: 'chatRooms/$roomId/messages',
+              firestoreCollection: ChatMessage.firestoreCollection(roomId),
+              orderField: 'timestamp',
+              descending: false,
             ),
           ),
           NewMessage(

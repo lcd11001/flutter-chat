@@ -6,6 +6,8 @@ part 'user_avatars.g.dart';
 
 @freezed
 class UserAvatars with _$UserAvatars {
+  static const String collectionId = 'user_avatars';
+
   factory UserAvatars({
     required String id,
     required String avatarUrl,

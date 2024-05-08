@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat/firebase/firebase_auth_helper.dart';
 import 'package:chat/firebase/firebase_storage_helper.dart';
 import 'package:chat/models/chat_message.dart';
+import 'package:chat/models/user_avatars.dart';
 import 'package:flutter/material.dart';
 
 final Map<String, String> _cachedAvatarUrl = {};
@@ -85,8 +86,8 @@ class ChatMessageItem extends StatelessWidget {
       return _cachedAvatarUrl[sender]!;
     }
 
-    final url =
-        await FirebaseStorageHelper().download('user_avatars', '$sender.jpg');
+    final url = await FirebaseStorageHelper()
+        .download(UserAvatars.collectionId, '$sender.jpg');
     _cachedAvatarUrl[sender] = url;
 
     return url;

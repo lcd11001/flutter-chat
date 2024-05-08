@@ -35,33 +35,43 @@ class MainApp extends StatelessWidget {
         stream: FirebaseAuthHelper().authStateChanges,
         builder: (ctx, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const Scaffold(
+              body: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
           }
 
-          // debugPrint('snapshot.hasData: ${snapshot.hasData}');
-          // debugPrint('snapshot.data: ${snapshot.data}');
+          debugPrint('snapshot.hasData: ${snapshot.hasData}');
+          debugPrint('snapshot.data: ${snapshot.data}');
 
           if (snapshot.hasData) {
             final user = snapshot.data;
             if (user != null && (!forceValidateEmail || user.emailVerified)) {
               // return const MainScreen();
-              return AnimatedSwitcher(
-                duration: const Duration(milliseconds: 500),
-                transitionBuilder: (child, animation) {
-                  return PageRouteHelper.slideIn(child, animation);
-                },
-                child: const MainScreen(),
+              return Scaffold(
+                body: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 500),
+                  transitionBuilder: (child, animation) {
+                    return PageRouteHelper.slideIn(child, animation);
+                  },
+                  child: const MainScreen(),
+                ),
               );
             }
           }
-          // return const AuthScreen();
-          return AnimatedSwitcher(
-            duration: const Duration(milliseconds: 500),
-            transitionBuilder: (child, animation) {
-              return PageRouteHelper.slideIn(child, animation);
-            },
-            child: AuthScreen(
-              forceValidateEmail: forceValidateEmail,
+          // return AuthScreen(
+          //   forceValidateEmail: forceValidateEmail,
+          // );
+          return Scaffold(
+            body: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 500),
+              transitionBuilder: (child, animation) {
+                return PageRouteHelper.slideIn(child, animation);
+              },
+              child: AuthScreen(
+                forceValidateEmail: forceValidateEmail,
+              ),
             ),
           );
         },

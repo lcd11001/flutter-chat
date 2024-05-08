@@ -169,25 +169,34 @@ class _AuthScreenState extends State<AuthScreen> {
     );
   }
 
-  void _openSignupScreen() async {
-    final signUpInfo = await Navigator.of(context).push(
+  void _openSignupScreen() {
+    Navigator.of(context)
+        .push(
       PageRouteHelper.slideInRoute<UserInfo>(
         SignupScreen(
           forceValidateEmail: widget.forceValidateEmail,
         ),
         transitionType: PageTransitionType.slideInFromRight,
       ),
+      // MaterialPageRoute<UserInfo>(
+      //   builder: (ctx) => SignupScreen(
+      //     forceValidateEmail: widget.forceValidateEmail,
+      //   ),
+      // ),
+    )
+        .then(
+      (signUpInfo) {
+        // debugPrint('signUpInfo: $signUpInfo');
+
+        if (signUpInfo != null) {
+          setState(() {
+            _emailController.text = signUpInfo.email;
+            _passwordController.text = '';
+            _isFirstLogin = true;
+          });
+        }
+      },
     );
-
-    // debugPrint('signUpInfo: $signUpInfo');
-
-    if (signUpInfo != null && context.mounted) {
-      setState(() {
-        _emailController.text = signUpInfo.email;
-        _passwordController.text = '';
-        _isFirstLogin = true;
-      });
-    }
   }
 
   void _onLogin() {

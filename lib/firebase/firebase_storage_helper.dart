@@ -27,4 +27,10 @@ class FirebaseStorageHelper {
     await uploadTask.whenComplete(() => null);
     return await storageReference.getDownloadURL();
   }
+
+  Future<String> download(String downloadPath, String downloadName) async {
+    Reference storageReference =
+        _firebaseStorage.ref().child(downloadPath).child(downloadName);
+    return await storageReference.getDownloadURL();
+  }
 }

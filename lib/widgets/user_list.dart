@@ -38,8 +38,6 @@ class UserList extends StatelessWidget {
           );
         }
 
-        debugPrint('snapshot.data!.docs.length: ${snapshot.data!.docs.length}');
-
         final users = snapshot.data!.docs.where((doc) {
           final data = doc.data();
           final id = data['id'] as String;
@@ -49,9 +47,14 @@ class UserList extends StatelessWidget {
           return true;
         }).map((doc) {
           final data = doc.data();
-          debugPrint('data: $data');
           return UserInfo.fromJson(data);
         }).toList();
+
+        if (users.isEmpty) {
+          return const Center(
+            child: Text('No other users found.'),
+          );
+        }
 
         return ListView.builder(
           itemCount: users.length,

@@ -186,8 +186,6 @@ class _AuthScreenState extends State<AuthScreen> {
     )
         .then(
       (signUpInfo) {
-        // debugPrint('signUpInfo: $signUpInfo');
-
         if (signUpInfo != null) {
           setState(() {
             _emailController.text = signUpInfo.email;

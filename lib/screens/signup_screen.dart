@@ -53,7 +53,6 @@ class _SignupScreenState extends State<SignupScreen> {
               UserImagePicker(
                 radius: 80,
                 pickedImage: (image) {
-                  debugPrint('pickedImage: ${image.path}');
                   _avatarImage = image;
                 },
               ),
@@ -263,7 +262,6 @@ class _SignupScreenState extends State<SignupScreen> {
         );
       },
     ).then((value) {
-      debugPrint('set user info success: $value');
       isSuccess = value;
     }).catchError((error) {
       widget.showSnackBar(context, 'Sign up error: $error');

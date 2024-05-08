@@ -1,3 +1,4 @@
+import 'package:chat/firebase/firebase_auth_helper.dart';
 import 'package:chat/firebase/firebase_firestore_helper.dart';
 import 'package:chat/models/user_info.dart';
 import 'package:chat/widgets/user_item.dart';
@@ -37,9 +38,20 @@ class UserList extends StatelessWidget {
           );
         }
 
-        final users = snapshot.data!.docs
-            .map((doc) => UserInfo.fromJson(doc.data()))
-            .toList();
+        debugPrint('snapshot.data!.docs.length: ${snapshot.data!.docs.length}');
+
+        final users = snapshot.data!.docs.where((doc) {
+          final data = doc.data();
+          final id = data['id'] as String;
+          if (id == FirebaseAuthHelper().currentUserUid) {
+            return false;
+          }
+          return true;
+        }).map((doc) {
+          final data = doc.data();
+          debugPrint('data: $data');
+          return UserInfo.fromJson(data);
+        }).toList();
 
         return ListView.builder(
           itemCount: users.length,

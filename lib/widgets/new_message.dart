@@ -59,8 +59,15 @@ class _NewMessageState extends State<NewMessage> {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Container(
-      margin: const EdgeInsets.only(top: 8.0),
-      padding: const EdgeInsets.all(8.0),
+      margin: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 16.0,
+        vertical: 0.0,
+      ),
+      decoration: BoxDecoration(
+        color: colorScheme.secondary.withOpacity(0.25),
+        borderRadius: BorderRadius.circular(16),
+      ),
       child: Row(
         children: [
           Expanded(
@@ -69,7 +76,11 @@ class _NewMessageState extends State<NewMessage> {
               textCapitalization: TextCapitalization.sentences,
               autocorrect: true,
               keyboardType: TextInputType.text,
-              decoration: const InputDecoration(labelText: 'Send a message...'),
+              decoration: const InputDecoration(
+                labelText: 'Send a message...',
+                border: InputBorder.none,
+              ),
+              onSubmitted: (_) => _sendMessage(),
             ),
           ),
           IconButton(

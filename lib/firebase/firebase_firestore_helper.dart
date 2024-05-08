@@ -75,4 +75,9 @@ class FirebaseFirestoreHelper {
     }
     return false;
   }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> getCollectionStream(
+      String collection) {
+    return _firebaseFirestore.collection(collection).snapshots();
+  }
 }

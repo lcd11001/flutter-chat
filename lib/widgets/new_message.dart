@@ -43,7 +43,6 @@ class _NewMessageState extends State<NewMessage> {
     final userInfo =
         await FirebaseFirestoreHelper().getDocument('users', userId);
     debugPrint('user info: $userInfo');
-    userInfo['id'] = userId;
 
     final user = UserInfo.fromJson(userInfo);
     debugPrint('user: $user');

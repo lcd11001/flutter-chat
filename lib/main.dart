@@ -42,8 +42,8 @@ class MainApp extends StatelessWidget {
             );
           }
 
-          debugPrint('snapshot.hasData: ${snapshot.hasData}');
-          debugPrint('snapshot.data: ${snapshot.data}');
+          // debugPrint('snapshot.hasData: ${snapshot.hasData}');
+          // debugPrint('snapshot.data: ${snapshot.data}');
 
           if (snapshot.hasData) {
             final user = snapshot.data;

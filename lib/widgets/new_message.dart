@@ -34,21 +34,15 @@ class _NewMessageState extends State<NewMessage> {
     _submitMessage(message);
   }
 
-  Future<void> _submitMessage(String message) async {
+  Future<bool> _submitMessage(String message) async {
     if (message.isEmpty) {
-      return;
+      return false;
     }
 
     final userId = FirebaseAuthHelper().currentUserUid!;
-    final userInfo =
-        await FirebaseFirestoreHelper().getDocument('users', userId);
-    debugPrint('user info: $userInfo');
-
-    final user = UserInfo.fromJson(userInfo);
-    debugPrint('user: $user');
 
     final chatMessage = ChatMessage(
-      sender: user.id,
+      sender: userId,
       message: message,
       timestamp: Timestamp.now(),
     );
@@ -57,7 +51,8 @@ class _NewMessageState extends State<NewMessage> {
       'chatRooms/${widget.roomId}/messages',
       chatMessage.toJson(),
     );
-    debugPrint('send chat message success: $success');
+
+    return success;
   }
 
   @override

@@ -34,7 +34,6 @@ class MainScreen extends StatelessWidget {
       body: UserList(
         firestoreCollection: 'users',
         onTap: (user) {
-          debugPrint('User tapped: ${user.name}');
           _openChatScreen(context, user);
         },
       ),
@@ -57,7 +56,6 @@ class MainScreen extends StatelessWidget {
     final friend = user.id;
     final roomId = me.compareTo(friend) > 0 ? '$friend-$me' : '$me-$friend';
     final namespace = uuid.v5(Uuid.NAMESPACE_NIL, roomId);
-    debugPrint('Room ID: $namespace');
     return namespace;
   }
 }

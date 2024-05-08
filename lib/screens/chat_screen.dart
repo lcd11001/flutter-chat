@@ -24,7 +24,8 @@ class ChatScreen extends StatelessWidget {
             child: ChatMessageList(
               firestoreCollection: ChatMessage.firestoreCollection(roomId),
               orderField: 'timestamp',
-              descending: false,
+              descending: true,
+              reverse: true,
             ),
           ),
           NewMessage(

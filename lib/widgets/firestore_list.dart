@@ -6,12 +6,14 @@ abstract class FirestoreList extends StatelessWidget {
   final String firestoreCollection;
   final String? orderField;
   final bool descending;
+  final bool reverse;
 
   const FirestoreList({
     super.key,
     required this.firestoreCollection,
     this.orderField,
     this.descending = false,
+    this.reverse = false,
   });
 
   Widget itemBuilder(BuildContext context, Map<String, dynamic> document);
@@ -50,6 +52,7 @@ abstract class FirestoreList extends StatelessWidget {
         final documents = sortDocuments(snapshot.data!.docs);
 
         return ListView.builder(
+          reverse: reverse,
           itemCount: documents.length,
           itemBuilder: (ctx2, index) {
             final document = documents.elementAt(index);

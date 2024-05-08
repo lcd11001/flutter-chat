@@ -11,6 +11,7 @@ class UserList extends FirestoreList {
     super.key,
     super.orderField,
     super.descending,
+    super.reverse,
     required super.firestoreCollection,
     required this.onTap,
   });

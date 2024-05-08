@@ -10,6 +10,7 @@ class ChatMessageList extends FirestoreList {
     required super.firestoreCollection,
     super.orderField,
     super.descending,
+    super.reverse,
   });
 
   @override

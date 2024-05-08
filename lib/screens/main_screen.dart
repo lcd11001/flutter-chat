@@ -25,13 +25,11 @@ class MainScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Expanded(
-        child: UserList(
-          firestoreCollection: 'users',
-          onTap: (user) {
-            debugPrint('User tapped: ${user.name}');
-          },
-        ),
+      body: UserList(
+        firestoreCollection: 'users',
+        onTap: (user) {
+          debugPrint('User tapped: ${user.name}');
+        },
       ),
     );
   }

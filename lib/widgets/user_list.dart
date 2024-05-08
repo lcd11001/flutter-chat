@@ -17,7 +17,8 @@ class UserList extends FirestoreList {
   });
 
   @override
-  Widget itemBuilder(BuildContext context, Map<String, dynamic> document) {
+  Widget itemBuilder(BuildContext context, Map<String, dynamic> document,
+      Map<String, dynamic>? nextDocument) {
     final user = UserInfo.fromJson(document);
     if (user.id == FirebaseAuthHelper().currentUserUid) {
       return const SizedBox.shrink();

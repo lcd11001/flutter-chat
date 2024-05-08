@@ -9,11 +9,17 @@ final Map<String, String> _cachedAvatarUrl = {};
 
 class ChatMessageItem extends StatelessWidget {
   final ChatMessage message;
+  final bool isFirstInSequence;
 
-  const ChatMessageItem({
+  const ChatMessageItem.first({
     super.key,
     required this.message,
-  });
+  }) : isFirstInSequence = true;
+
+  const ChatMessageItem.next({
+    super.key,
+    required this.message,
+  }) : isFirstInSequence = false;
 
   @override
   Widget build(BuildContext context) {
@@ -28,40 +34,46 @@ class ChatMessageItem extends StatelessWidget {
     final textAlign = isMe ? TextAlign.end : TextAlign.start;
 
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 5.0),
-      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+      margin: EdgeInsets.only(
+        top: isFirstInSequence ? 20.0 : 0.0,
+      ),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 10.0,
+        vertical: 1.0,
+      ),
       child: Column(
         crossAxisAlignment: columnAlign,
         children: [
-          FutureBuilder(
-            future: _getAvatarUrl(message.sender),
-            builder: (ctx, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator();
-              }
+          if (isFirstInSequence)
+            FutureBuilder(
+              future: _getAvatarUrl(message.sender),
+              builder: (ctx, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                }
 
-              if (snapshot.hasError) {
-                debugPrint('Error: ${snapshot.error}');
-                return const Icon(Icons.error);
-              }
+                if (snapshot.hasError) {
+                  debugPrint('Error: ${snapshot.error}');
+                  return const Icon(Icons.error);
+                }
 
-              final avatarUrl = snapshot.data as String;
+                final avatarUrl = snapshot.data as String;
 
-              return ClipOval(
-                child: CachedNetworkImage(
-                  imageUrl: avatarUrl,
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
-                  placeholder: (context, url) =>
-                      const CircularProgressIndicator(),
-                  width: 30.0,
-                  height: 30.0,
-                  fit: BoxFit.cover,
-                ),
-              );
-            },
-          ),
+                return ClipOval(
+                  child: CachedNetworkImage(
+                    imageUrl: avatarUrl,
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                    placeholder: (context, url) =>
+                        const CircularProgressIndicator(),
+                    width: 30.0,
+                    height: 30.0,
+                    fit: BoxFit.cover,
+                  ),
+                );
+              },
+            ),
           Container(
-            margin: const EdgeInsets.symmetric(vertical: 5.0),
             padding: const EdgeInsets.all(10.0),
             decoration: BoxDecoration(
               color: bgColor.withOpacity(0.8),

@@ -14,9 +14,19 @@ class ChatMessageList extends FirestoreList {
   });
 
   @override
-  Widget itemBuilder(BuildContext context, Map<String, dynamic> document) {
+  Widget itemBuilder(BuildContext context, Map<String, dynamic> document,
+      Map<String, dynamic>? nextDocument) {
     final message = ChatMessage.fromJson(document);
-    return ChatMessageItem(
+    final nextMessage =
+        nextDocument != null ? ChatMessage.fromJson(nextDocument) : null;
+
+    if (nextMessage != null && message.sender == nextMessage.sender) {
+      return ChatMessageItem.next(
+        message: message,
+      );
+    }
+
+    return ChatMessageItem.first(
       message: message,
     );
   }

@@ -16,7 +16,8 @@ abstract class FirestoreList extends StatelessWidget {
     this.reverse = false,
   });
 
-  Widget itemBuilder(BuildContext context, Map<String, dynamic> document);
+  Widget itemBuilder(BuildContext context, Map<String, dynamic> document,
+      Map<String, dynamic>? nextDocument);
 
   Iterable<Map<String, dynamic>> sortDocuments(
       List<QueryDocumentSnapshot<Map<String, dynamic>>> documents) {
@@ -56,7 +57,10 @@ abstract class FirestoreList extends StatelessWidget {
           itemCount: documents.length,
           itemBuilder: (ctx2, index) {
             final document = documents.elementAt(index);
-            return itemBuilder(ctx2, document);
+            final nextDocument = index + 1 < documents.length
+                ? documents.elementAt(index + 1)
+                : null;
+            return itemBuilder(ctx2, document, nextDocument);
           },
         );
       },

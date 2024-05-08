@@ -1,4 +1,5 @@
 import 'package:chat/firebase/firebase_firestore_helper.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 abstract class FirestoreList extends StatelessWidget {
@@ -7,6 +8,11 @@ abstract class FirestoreList extends StatelessWidget {
   const FirestoreList({super.key, required this.firestoreCollection});
 
   Widget itemBuilder(BuildContext context, Map<String, dynamic> document);
+
+  Iterable<Map<String, dynamic>> sortDocuments(
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> documents) {
+    return documents.map((e) => e.data());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,12 +38,12 @@ abstract class FirestoreList extends StatelessWidget {
           );
         }
 
-        final documents = snapshot.data!.docs;
+        final documents = sortDocuments(snapshot.data!.docs);
 
         return ListView.builder(
           itemCount: documents.length,
           itemBuilder: (ctx2, index) {
-            final document = documents[index].data();
+            final document = documents.elementAt(index);
             return itemBuilder(ctx2, document);
           },
         );

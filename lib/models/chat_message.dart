@@ -9,6 +9,8 @@ part 'chat_message.g.dart';
 
 @freezed
 class ChatMessage with _$ChatMessage {
+  static String fcmTopicPrefix(String roomId) => 'fcm/chatRooms/$roomId';
+
   static String firestoreCollection(String roomId) =>
       'chatRooms/$roomId/messages';
 

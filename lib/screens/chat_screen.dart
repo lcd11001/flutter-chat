@@ -23,7 +23,8 @@ class _ChatScreenState extends State<ChatScreen> {
     super.initState();
 
     FirebaseMessagingHelper().init().then((_) {
-      FirebaseMessagingHelper().subscribe('chat');
+      FirebaseMessagingHelper()
+          .subscribe(ChatMessage.fcmTopicPrefix(widget.roomId));
     });
   }
 

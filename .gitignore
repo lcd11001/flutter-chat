@@ -44,3 +44,4 @@ app.*.map.json
 firebase_options.dart
 *.freezed.dart
 *.g.dart
+functions/*firebase-adminsdk*.json

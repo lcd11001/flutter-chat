@@ -15,8 +15,15 @@ class FirebaseMessagingHelper {
     await _requestToken();
   }
 
-  Future<void> subscribe(String topic) async {
-    await _firebaseMessaging.subscribeToTopic(topic);
+  Future<bool> subscribe(String topic) async {
+    try {
+      await _firebaseMessaging.subscribeToTopic(topic);
+      return true;
+    } catch (e) {
+      debugPrint('Failed to subscribe to topic: $topic');
+      debugPrint(e.toString());
+    }
+    return false;
   }
 
   Future<void> _requestToken() async {

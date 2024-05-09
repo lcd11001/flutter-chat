@@ -67,16 +67,16 @@ exports.onChatMessageCreated = onDocumentCreated("chatRooms/{roomId}/messages/{m
         return Promise.resolve();
     }
 
-    logger.info("New message: ", data);
+    // logger.info("New message: ", data);
 
     const topic = `fcm.chatRooms.${event.params.roomId}`
     const message = data.message ?? 'new message';
 
     return getUserName(data.sender).then((userName) =>
     {
-        logger.info("userName", userName);
-        logger.info("message", message);
-        logger.info("Sending message to topic: ", topic);
+        // logger.info("userName", userName);
+        // logger.info("message", message);
+        // logger.info("Sending message to topic: ", topic);
 
         return messaging.sendToTopic(topic, {
             // sending a notification message

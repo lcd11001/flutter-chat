@@ -18,14 +18,17 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  void registerFCM() async {
+    await FirebaseMessagingHelper().init();
+    await FirebaseMessagingHelper()
+        .subscribe(ChatMessage.fcmTopicPrefix(widget.roomId));
+  }
+
   @override
   void initState() {
     super.initState();
 
-    FirebaseMessagingHelper().init().then((_) {
-      FirebaseMessagingHelper()
-          .subscribe(ChatMessage.fcmTopicPrefix(widget.roomId));
-    });
+    registerFCM();
   }
 
   @override

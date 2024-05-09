@@ -8,20 +8,12 @@
  */
 
 const { onRequest } = require("firebase-functions/v2/https");
-const { onDocumentCreated, Change, FirestoreEvent } = require("firebase-functions/v2/firestore");
+const { onDocumentCreated } = require("firebase-functions/v2/firestore");
 const logger = require("firebase-functions/logger");
 const admin = require("firebase-admin");
 
 // Make sure you call initializeApp() before using any of the Firebase services
-// admin.initializeApp();
-
-var serviceAccount = require("flutter-test-6364b-firebase-adminsdk-p4nbq-e8e68a6607.json");
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://flutter-test-6364b-default-rtdb.asia-southeast1.firebasedatabase.app"
-});
-
+admin.initializeApp();
 
 const db = admin.firestore();
 const messaging = admin.messaging();
@@ -78,15 +70,19 @@ exports.onChatMessageCreated = onDocumentCreated("chatRooms/{roomId}/messages/{m
     logger.info("New message: ", data);
 
     const topic = `fcm.chatRooms.${event.params.roomId}`
+    const message = data.message ?? 'new message';
+
     return getUserName(data.sender).then((userName) =>
     {
-        logger.info("userName", userName, "Sending message to topic: ", topic);
+        logger.info("userName", userName);
+        logger.info("message", message);
+        logger.info("Sending message to topic: ", topic);
 
         return messaging.sendToTopic(topic, {
             // sending a notification message
             notification: {
-                title: userName ?? 'New title',
-                body: data.message ?? 'New body',
+                title: userName,
+                body: message,
                 clickAction: 'FLUTTER_NOTIFICATION_CLICK',
             },
         }).catch((error) =>
